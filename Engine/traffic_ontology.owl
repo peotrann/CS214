@@ -1,0 +1,298 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:owl="http://www.w3.org/2002/07/owl#"
+         xml:base="http://cs214.org/traffic_ontology.owl"
+         xmlns="http://cs214.org/traffic_ontology.owl#">
+
+<owl:Ontology rdf:about="http://cs214.org/traffic_ontology.owl"/>
+
+<owl:ObjectProperty rdf:about="#ap_dung_cho_phuong_tien">
+  <rdfs:domain rdf:resource="#LuatXuPhat"/>
+  <rdfs:range rdf:resource="#PhuongTien"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#ap_dung_hanh_vi">
+  <rdfs:domain rdf:resource="#LuatXuPhat"/>
+  <rdfs:range rdf:resource="#HanhVi"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#co_dieu_kien_ap_dung">
+  <rdfs:domain rdf:resource="#LuatXuPhat"/>
+  <rdfs:range rdf:resource="#DieuKien"/>
+</owl:ObjectProperty>
+
+<owl:ObjectProperty rdf:about="#can_cu_van_ban">
+  <rdfs:domain rdf:resource="#LuatXuPhat"/>
+  <rdfs:range rdf:resource="#VanBanPhapLuat"/>
+</owl:ObjectProperty>
+
+<owl:DatatypeProperty rdf:about="#ten_phuong_tien">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#PhuongTien"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#ten_hanh_vi">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#HanhVi"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#loai_hanh_vi">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#HanhVi"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#mo_ta_hanh_vi">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#HanhVi"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#mo_ta_dieu_kien">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#DieuKien"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#ten_van_ban">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#VanBanPhapLuat"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#so_hieu">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#VanBanPhapLuat"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#loai_van_ban">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#VanBanPhapLuat"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#nam_ban_hanh">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#VanBanPhapLuat"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#hieu_luc_tu">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#VanBanPhapLuat"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#date"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#hieu_luc_den">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#VanBanPhapLuat"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#date"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#tinh_trang">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#VanBanPhapLuat"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#muc_phat_min">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#LuatXuPhat"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#muc_phat_max">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#LuatXuPhat"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#hinh_thuc_bo_sung">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#LuatXuPhat"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#dieu">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#LuatXuPhat"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#khoan">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#LuatXuPhat"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#doi_tuong_ap_dung">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#LuatXuPhat"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:DatatypeProperty rdf:about="#ghi_chu">
+  <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+  <rdfs:domain rdf:resource="#LuatXuPhat"/>
+  <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+</owl:DatatypeProperty>
+
+<owl:Class rdf:about="#PhuongTien">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#HanhVi">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#DieuKien">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#VanBanPhapLuat">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:Class rdf:about="#LuatXuPhat">
+  <rdfs:subClassOf rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+</owl:Class>
+
+<owl:NamedIndividual rdf:about="#PT01">
+  <rdf:type rdf:resource="#PhuongTien"/>
+  <ten_phuong_tien rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Xe máy</ten_phuong_tien>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#PT02">
+  <rdf:type rdf:resource="#PhuongTien"/>
+  <ten_phuong_tien rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Ô tô con</ten_phuong_tien>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#PT03">
+  <rdf:type rdf:resource="#PhuongTien"/>
+  <ten_phuong_tien rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Xe tải</ten_phuong_tien>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#PT04">
+  <rdf:type rdf:resource="#PhuongTien"/>
+  <ten_phuong_tien rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Xe đạp điện</ten_phuong_tien>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#HV01">
+  <rdf:type rdf:resource="#HanhVi"/>
+  <ten_hanh_vi rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Không đội mũ bảo hiểm</ten_hanh_vi>
+  <loai_hanh_vi rdf:datatype="http://www.w3.org/2001/XMLSchema#string">An toàn giao thông</loai_hanh_vi>
+  <mo_ta_hanh_vi rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Người điều khiển xe máy không đội mũ bảo hiểm</mo_ta_hanh_vi>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#HV02">
+  <rdf:type rdf:resource="#HanhVi"/>
+  <ten_hanh_vi rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Vượt đèn đỏ</ten_hanh_vi>
+  <loai_hanh_vi rdf:datatype="http://www.w3.org/2001/XMLSchema#string">An toàn giao thông</loai_hanh_vi>
+  <mo_ta_hanh_vi rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Không chấp hành tín hiệu đèn giao thông</mo_ta_hanh_vi>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#HV03">
+  <rdf:type rdf:resource="#HanhVi"/>
+  <ten_hanh_vi rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Chạy quá tốc độ</ten_hanh_vi>
+  <loai_hanh_vi rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Tốc độ</loai_hanh_vi>
+  <mo_ta_hanh_vi rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Điều khiển phương tiện vượt quá tốc độ cho phép</mo_ta_hanh_vi>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#DK01">
+  <rdf:type rdf:resource="#DieuKien"/>
+  <mo_ta_dieu_kien rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Gây tai nạn giao thông</mo_ta_dieu_kien>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#DK02">
+  <rdf:type rdf:resource="#DieuKien"/>
+  <mo_ta_dieu_kien rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Tái phạm nhiều lần</mo_ta_dieu_kien>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#DK03">
+  <rdf:type rdf:resource="#DieuKien"/>
+  <mo_ta_dieu_kien rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Nồng độ cồn vượt mức cho phép</mo_ta_dieu_kien>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#VB01">
+  <rdf:type rdf:resource="#VanBanPhapLuat"/>
+  <ten_van_ban rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Nghị định xử phạt giao thông đường bộ</ten_van_ban>
+  <so_hieu rdf:datatype="http://www.w3.org/2001/XMLSchema#string">100/2019/NĐ-CP</so_hieu>
+  <loai_van_ban rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Nghị định</loai_van_ban>
+  <nam_ban_hanh rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2019</nam_ban_hanh>
+  <hieu_luc_tu rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2020-01-01</hieu_luc_tu>
+  <hieu_luc_den rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-06-30</hieu_luc_den>
+  <tinh_trang rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Hết hiệu lực</tinh_trang>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#VB02">
+  <rdf:type rdf:resource="#VanBanPhapLuat"/>
+  <ten_van_ban rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Nghị định xử phạt giao thông đường bộ</ten_van_ban>
+  <so_hieu rdf:datatype="http://www.w3.org/2001/XMLSchema#string">168/2024/NĐ-CP</so_hieu>
+  <loai_van_ban rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Nghị định</loai_van_ban>
+  <nam_ban_hanh rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2024</nam_ban_hanh>
+  <hieu_luc_tu rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-07-01</hieu_luc_tu>
+  <tinh_trang rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Còn hiệu lực</tinh_trang>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#L01">
+  <rdf:type rdf:resource="#LuatXuPhat"/>
+  <ap_dung_cho_phuong_tien rdf:resource="#PT01"/>
+  <ap_dung_hanh_vi rdf:resource="#HV01"/>
+  <can_cu_van_ban rdf:resource="#VB02"/>
+  <muc_phat_min rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">200000.0</muc_phat_min>
+  <muc_phat_max rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">300000.0</muc_phat_max>
+  <dieu rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Điều 6</dieu>
+  <khoan rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Khoản 2</khoan>
+  <doi_tuong_ap_dung rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Người điều khiển</doi_tuong_ap_dung>
+  <ghi_chu rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Không đội mũ bảo hiểm</ghi_chu>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#L02">
+  <rdf:type rdf:resource="#LuatXuPhat"/>
+  <ap_dung_cho_phuong_tien rdf:resource="#PT01"/>
+  <ap_dung_hanh_vi rdf:resource="#HV02"/>
+  <can_cu_van_ban rdf:resource="#VB02"/>
+  <muc_phat_min rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">800000.0</muc_phat_min>
+  <muc_phat_max rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1000000.0</muc_phat_max>
+  <hinh_thuc_bo_sung rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Tước GPLX 1 tháng</hinh_thuc_bo_sung>
+  <dieu rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Điều 7</dieu>
+  <khoan rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Khoản 4</khoan>
+  <doi_tuong_ap_dung rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Người điều khiển</doi_tuong_ap_dung>
+  <ghi_chu rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Vượt đèn đỏ</ghi_chu>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#L03">
+  <rdf:type rdf:resource="#LuatXuPhat"/>
+  <ap_dung_cho_phuong_tien rdf:resource="#PT02"/>
+  <ap_dung_hanh_vi rdf:resource="#HV03"/>
+  <can_cu_van_ban rdf:resource="#VB02"/>
+  <co_dieu_kien_ap_dung rdf:resource="#DK01"/>
+  <muc_phat_min rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">4000000.0</muc_phat_min>
+  <muc_phat_max rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">6000000.0</muc_phat_max>
+  <hinh_thuc_bo_sung rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Tước GPLX 3 tháng</hinh_thuc_bo_sung>
+  <dieu rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Điều 8</dieu>
+  <khoan rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Khoản 6</khoan>
+  <doi_tuong_ap_dung rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Người điều khiển</doi_tuong_ap_dung>
+  <ghi_chu rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Quá tốc độ gây tai nạn</ghi_chu>
+</owl:NamedIndividual>
+
+<owl:NamedIndividual rdf:about="#L04">
+  <rdf:type rdf:resource="#LuatXuPhat"/>
+  <ap_dung_cho_phuong_tien rdf:resource="#PT01"/>
+  <ap_dung_hanh_vi rdf:resource="#HV03"/>
+  <can_cu_van_ban rdf:resource="#VB01"/>
+  <muc_phat_min rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">600000.0</muc_phat_min>
+  <muc_phat_max rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">1000000.0</muc_phat_max>
+  <dieu rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Điều 6</dieu>
+  <khoan rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Khoản 3</khoan>
+  <doi_tuong_ap_dung rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Người điều khiển</doi_tuong_ap_dung>
+  <ghi_chu rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Luật cũ để test suy diễn theo thời gian</ghi_chu>
+</owl:NamedIndividual>
+
+
+</rdf:RDF>
