@@ -1,7 +1,6 @@
 from owlready2 import *
 from pathlib import Path
 
-# Đường dẫn ontology
 ENGINE_DIR = Path(__file__).resolve().parent
 ONTO_FILE = ENGINE_DIR / "traffic_ontology.owl"
 
@@ -9,17 +8,20 @@ ONTO_FILE = ENGINE_DIR / "traffic_ontology.owl"
 onto = get_ontology(str(ONTO_FILE)).load()
 print("[05_inference_engine.py] Ontology loaded")
 
+def safe_getattr(obj, attr):
+    """Lấy thuộc tính nếu tồn tại, nếu None trả về None"""
+    return getattr(obj, attr) if hasattr(obj, attr) and getattr(obj, attr) is not None else None
+
 def infer_penalties(vehicle_id=None, action_id=None, condition_id=None):
     """
-    vehicle_id: mã phương tiện (ví dụ 'PT01')
-    action_id: mã hành vi (ví dụ 'HV02')
-    condition_id: mã điều kiện (ví dụ 'DK01')
-    Trả về danh sách luật áp dụng
+    Động cơ suy diễn (forward chaining):
+    - Áp dụng nhiều luật liên quan
+    - Trả về danh sách luật áp dụng + trường suy diễn
     """
-    results = []
-    
+    inferred_results = []
+
     for law in onto.LuatXuPhat.instances():
-        # Kiểm tra phương tiện
+        # Kiểm tra điều kiện phương tiện
         if vehicle_id:
             vehicle_names = [pt.name for pt in law.ap_dung_cho_phuong_tien] if law.ap_dung_cho_phuong_tien else []
             if vehicle_id not in vehicle_names:
@@ -31,28 +33,40 @@ def infer_penalties(vehicle_id=None, action_id=None, condition_id=None):
             if action_id not in action_names:
                 continue
 
-        # Kiểm tra điều kiện
+        # Kiểm tra điều kiện áp dụng
         if law.co_dieu_kien_ap_dung:
             condition_names = [dk.name for dk in law.co_dieu_kien_ap_dung]
             if condition_id and condition_id not in condition_names:
                 continue
 
-        # Lấy thông tin đầy đủ từ luật
+        # Tạo dict luật
         law_dict = {
             "id_luat": law.name,
             "phuong_tien": [pt.name for pt in law.ap_dung_cho_phuong_tien] if law.ap_dung_cho_phuong_tien else [],
             "hanh_vi": [hv.name for hv in law.ap_dung_hanh_vi] if law.ap_dung_hanh_vi else [],
             "dieu_kien": [dk.name for dk in law.co_dieu_kien_ap_dung] if law.co_dieu_kien_ap_dung else [],
             "van_ban": [vb.name for vb in law.can_cu_van_ban] if law.can_cu_van_ban else [],
-            "muc_phat_min": getattr(law, "muc_phat_min", None),
-            "muc_phat_max": getattr(law, "muc_phat_max", None),
-            "hinh_thuc_bo_sung": getattr(law, "hinh_thuc_bo_sung", None),
-            "dieu": getattr(law, "dieu", None),
-            "khoan": getattr(law, "khoan", None),
-            "doi_tuong_ap_dung": getattr(law, "doi_tuong_ap_dung", None),
-            "ghi_chu": getattr(law, "ghi_chu", None)
+            "muc_phat_min": safe_getattr(law, "muc_phat_min"),
+            "muc_phat_max": safe_getattr(law, "muc_phat_max"),
+            "hinh_thuc_bo_sung": safe_getattr(law, "hinh_thuc_bo_sung"),
+            "dieu": safe_getattr(law, "dieu"),
+            "khoan": safe_getattr(law, "khoan"),
+            "doi_tuong_ap_dung": safe_getattr(law, "doi_tuong_ap_dung"),
+            "ghi_chu": safe_getattr(law, "ghi_chu")
         }
 
-        results.append(law_dict)
-        
-    return results
+        min_penalty = safe_getattr(law, "muc_phat_min")
+        max_penalty = safe_getattr(law, "muc_phat_max")
+        hinh_thuc = safe_getattr(law, "hinh_thuc_bo_sung")
+
+        suy_ra_list = []
+        if min_penalty or max_penalty:
+            suy_ra_list.append(f"Mức phạt từ {min_penalty or 0} đến {max_penalty or 0}")
+        if hinh_thuc:
+            suy_ra_list.append(f"Hình thức bổ sung: {hinh_thuc}")
+
+        law_dict["suy_ra"] = "; ".join(suy_ra_list) if suy_ra_list else "Không có thông tin suy diễn"
+
+        inferred_results.append(law_dict)
+
+    return inferred_results

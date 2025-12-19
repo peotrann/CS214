@@ -13,19 +13,18 @@ def safe_getattr(obj, attr):
     return getattr(obj, attr) if hasattr(obj, attr) and getattr(obj, attr) is not None else None
 
 def build_rules():
+    """
+    Chuyển tất cả luật trong ontology thành danh sách dict
+    Giữ nguyên cấu trúc IF–THEN
+    """
     rules = []
     for l in onto.LuatXuPhat.instances():
-        phuong_tien_list = [pt.name for pt in l.ap_dung_cho_phuong_tien] if l.ap_dung_cho_phuong_tien else []
-        hanh_vi_list = [hv.name for hv in l.ap_dung_hanh_vi] if l.ap_dung_hanh_vi else []
-        dieu_kien_list = [dk.name for dk in l.co_dieu_kien_ap_dung] if l.co_dieu_kien_ap_dung else []
-        van_ban_list = [vb.name for vb in l.can_cu_van_ban] if l.can_cu_van_ban else []
-
         rule = {
             "id_luat": l.name,
-            "phuong_tien": phuong_tien_list,
-            "hanh_vi": hanh_vi_list,
-            "dieu_kien": dieu_kien_list,
-            "van_ban": van_ban_list,
+            "phuong_tien": [pt.name for pt in l.ap_dung_cho_phuong_tien] if l.ap_dung_cho_phuong_tien else [],
+            "hanh_vi": [hv.name for hv in l.ap_dung_hanh_vi] if l.ap_dung_hanh_vi else [],
+            "dieu_kien": [dk.name for dk in l.co_dieu_kien_ap_dung] if l.co_dieu_kien_ap_dung else [],
+            "van_ban": [vb.name for vb in l.can_cu_van_ban] if l.can_cu_van_ban else [],
             "muc_phat_min": safe_getattr(l, "muc_phat_min"),
             "muc_phat_max": safe_getattr(l, "muc_phat_max"),
             "hinh_thuc_bo_sung": safe_getattr(l, "hinh_thuc_bo_sung"),
@@ -40,6 +39,5 @@ def build_rules():
 if __name__ == "__main__":
     rules = build_rules()
     print(f"[04_knowledge_ifthen.py] Tổng số luật IF–THEN: {len(rules)}")
-    # Hiển thị 5 luật đầu tiên
     for r in rules[:5]:
         print(r)

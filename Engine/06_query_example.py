@@ -33,9 +33,7 @@ vb_id2info = df_vb.set_index("id_van_ban").to_dict("index")  # id_van_ban -> dic
 def find_keyword(input_text, kw_dict):
     input_lower = input_text.lower()
     matched = [kw for kw in kw_dict if kw in input_lower]
-    if matched:
-        return max(matched, key=len)  # chọn từ dài nhất nếu có nhiều match
-    return None
+    return max(matched, key=len) if matched else None
 
 # Tìm năm trong câu nhập
 def find_year(input_text):
@@ -94,6 +92,7 @@ def display_law_readable(law):
     print(f"Điều/Khoản: {dieu} / {khoan}")
     print(f"Đối tượng áp dụng: {doi_tuong}")
     print(f"Ghi chú: {ghi_chu}")
+    print(f"Suy diễn (Inference): {law.get('suy_ra', 'Không có thông tin suy diễn')}")
     print("===============================================\n")
 
 # Interactive
