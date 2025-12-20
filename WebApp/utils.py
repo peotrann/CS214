@@ -90,6 +90,7 @@ def filter_laws_for_web(query_text):
             "dieu": law.get("dieu"),
             "khoan": law.get("khoan"),
             "ghi_chu": law.get("ghi_chu"),
+            "doi_tuong_ap_dung": law.get("doi_tuong_ap_dung"), 
             "van_ban": vb_info.get("ten_van_ban"),
             "so_hieu": vb_info.get("so_hieu"),
             "loai": vb_info.get("loai"),
