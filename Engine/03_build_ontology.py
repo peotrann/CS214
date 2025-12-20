@@ -26,10 +26,13 @@ spec.loader.exec_module(load_data_module)
 data = load_data_module.load_all_data()
 print("[03_build_ontology.py] Data loaded successfully")
 
-# Safe parsing
+# Safe parsing helpers
 def parse_float(x):
     try:
-        if x is None or pd.isna(x) or str(x).strip().lower() in ["none", ""]:
+        if x is None or pd.isna(x):
+            return None
+        s = str(x).strip().lower()
+        if s in ["", "none", "nan"]:
             return None
         return float(x)
     except:
@@ -37,7 +40,10 @@ def parse_float(x):
 
 def parse_int(x):
     try:
-        if x is None or pd.isna(x) or str(x).strip().lower() in ["none", ""]:
+        if x is None or pd.isna(x):
+            return None
+        s = str(x).strip().lower()
+        if s in ["", "none", "nan"]:
             return None
         return int(x)
     except:
@@ -45,7 +51,10 @@ def parse_int(x):
 
 def parse_date(x):
     try:
-        if x is None or pd.isna(x) or str(x).strip().lower() in ["none", ""]:
+        if x is None or pd.isna(x):
+            return None
+        s = str(x).strip().lower()
+        if s in ["", "none", "nan"]:
             return None
         s = str(x).split(" ")[0]
         return datetime.datetime.strptime(s, "%Y-%m-%d").date()
@@ -59,94 +68,123 @@ def parse_multi_ids(x):
 
 # Build individuals
 with onto:
+
+    # PhuongTien
     phuong_tien_map = {}
     for _, r in data["phuong_tien"].iterrows():
-        pt = ontology_module.PhuongTien(r["id_phuong_tien"])
-        if pd.notna(r.get("ten_phuong_tien")):
-            pt.ten_phuong_tien = r["ten_phuong_tien"]
-        phuong_tien_map[r["id_phuong_tien"]] = pt
+        pid = str(r["id_phuong_tien"])
+        pt = ontology_module.PhuongTien(pid)
 
+        if pd.notna(r.get("ten_phuong_tien")):
+            pt.ten_phuong_tien = str(r["ten_phuong_tien"])
+
+        phuong_tien_map[pid] = pt
+
+    # HanhVi
     hanh_vi_map = {}
     for _, r in data["hanh_vi"].iterrows():
-        hv = ontology_module.HanhVi(r["id_hanh_vi"])
-        if pd.notna(r.get("ten_hanh_vi")):
-            hv.ten_hanh_vi = r["ten_hanh_vi"]
-        if pd.notna(r.get("loai_hanh_vi")):
-            hv.loai_hanh_vi = r["loai_hanh_vi"]
-        if pd.notna(r.get("mo_ta")):
-            hv.mo_ta_hanh_vi = r["mo_ta"]
-        hanh_vi_map[r["id_hanh_vi"]] = hv
+        hid = str(r["id_hanh_vi"])
+        hv = ontology_module.HanhVi(hid)
 
+        if pd.notna(r.get("ten_hanh_vi")):
+            hv.ten_hanh_vi = str(r["ten_hanh_vi"])
+
+        if pd.notna(r.get("mo_ta")):
+            hv.mo_ta_hanh_vi = str(r["mo_ta"])
+
+        hanh_vi_map[hid] = hv
+
+    # DieuKien
     dieu_kien_map = {}
     for _, r in data["dieu_kien"].iterrows():
-        dk = ontology_module.DieuKien(r["id_dieu_kien"])
-        if pd.notna(r.get("mo_ta")):
-            dk.mo_ta_dieu_kien = r["mo_ta"]
-        dieu_kien_map[r["id_dieu_kien"]] = dk
+        did = str(r["id_dieu_kien"])
+        dk = ontology_module.DieuKien(did)
 
+        if pd.notna(r.get("mo_ta")):
+            dk.mo_ta_dieu_kien = str(r["mo_ta"])
+
+        dieu_kien_map[did] = dk
+
+    # VanBanPhapLuat
     van_ban_map = {}
     for _, r in data["van_ban"].iterrows():
-        vb = ontology_module.VanBanPhapLuat(r["id_van_ban"])
+        vid = str(r["id_van_ban"])
+        vb = ontology_module.VanBanPhapLuat(vid)
+
         if pd.notna(r.get("ten_van_ban")):
-            vb.ten_van_ban = r["ten_van_ban"]
+            vb.ten_van_ban = str(r["ten_van_ban"])
+
         if pd.notna(r.get("so_hieu")):
-            vb.so_hieu = r["so_hieu"]
+            vb.so_hieu = str(r["so_hieu"])
+
         if pd.notna(r.get("loai")):
-            vb.loai_van_ban = r["loai"]
+            vb.loai_van_ban = str(r["loai"])
 
-        tmp_int = parse_int(r.get("nam"))
-        if tmp_int is not None:
-            vb.nam_ban_hanh = tmp_int
+        y = parse_int(r.get("nam"))
+        if y is not None:
+            vb.nam_ban_hanh = y
 
-        tmp_dt1 = parse_date(r.get("hieu_luc_tu"))
-        tmp_dt2 = parse_date(r.get("hieu_luc_den"))
-        if tmp_dt1:
-            vb.hieu_luc_tu = tmp_dt1
-        if tmp_dt2:
-            vb.hieu_luc_den = tmp_dt2
+        d1 = parse_date(r.get("hieu_luc_tu"))
+        if d1:
+            vb.hieu_luc_tu = d1
+
+        d2 = parse_date(r.get("hieu_luc_den"))
+        if d2:
+            vb.hieu_luc_den = d2
 
         if pd.notna(r.get("tinh_trang")):
-            vb.tinh_trang = r["tinh_trang"]
+            vb.tinh_trang = str(r["tinh_trang"])
 
-        van_ban_map[r["id_van_ban"]] = vb
+        van_ban_map[vid] = vb
 
+    # LuatXuPhat
     for _, r in data["luat"].iterrows():
-        l = ontology_module.LuatXuPhat(r["id_luat"])
+        lid = str(r["id_luat"])
+        l = ontology_module.LuatXuPhat(lid)
 
-        tmp_min = parse_float(r.get("muc_phat_min"))
-        tmp_max = parse_float(r.get("muc_phat_max"))
-        if tmp_min is not None:
-            l.muc_phat_min = tmp_min
-        if tmp_max is not None:
-            l.muc_phat_max = tmp_max
+        v = parse_float(r.get("muc_phat_min"))
+        if v is not None:
+            l.muc_phat_min = v
+
+        v = parse_float(r.get("muc_phat_max"))
+        if v is not None:
+            l.muc_phat_max = v
 
         if pd.notna(r.get("hinh_thuc_bo_sung")):
-            l.hinh_thuc_bo_sung = r["hinh_thuc_bo_sung"]
+            l.hinh_thuc_bo_sung = str(r["hinh_thuc_bo_sung"])
+
         if pd.notna(r.get("dieu")):
-            l.dieu = r["dieu"]
+            l.dieu = str(r["dieu"])
+
         if pd.notna(r.get("khoan")):
-            l.khoan = r["khoan"]
+            l.khoan = str(r["khoan"])
+
         if pd.notna(r.get("doi_tuong_ap_dung")):
-            l.doi_tuong_ap_dung = r["doi_tuong_ap_dung"]
+            l.doi_tuong_ap_dung = str(r["doi_tuong_ap_dung"])
 
-        l.ghi_chu = r.get("ghi_chu", "")
+        if pd.notna(r.get("ghi_chu")):
+            l.ghi_chu = str(r["ghi_chu"])
 
-        pt_list = []
-        for pt_id in parse_multi_ids(r.get("id_phuong_tien")):
-            if pt_id in phuong_tien_map:
-                pt_list.append(phuong_tien_map[pt_id])
-        if pt_list:
-            l.ap_dung_cho_phuong_tien = pt_list
+        pts = []
+        for pid in parse_multi_ids(r.get("id_phuong_tien")):
+            if pid in phuong_tien_map:
+                pts.append(phuong_tien_map[pid])
+        if pts:
+            l.ap_dung_cho_phuong_tien = pts
 
-        if pd.notna(r.get("id_hanh_vi")) and r["id_hanh_vi"] in hanh_vi_map:
-            l.ap_dung_hanh_vi = [hanh_vi_map[r["id_hanh_vi"]]]
+        hid = r.get("id_hanh_vi")
+        if pd.notna(hid) and str(hid) in hanh_vi_map:
+            l.ap_dung_hanh_vi = [hanh_vi_map[str(hid)]]
 
-        if pd.notna(r.get("id_van_ban")) and r["id_van_ban"] in van_ban_map:
-            l.can_cu_van_ban = [van_ban_map[r["id_van_ban"]]]
+        vid = r.get("id_van_ban")
+        if pd.notna(vid) and str(vid) in van_ban_map:
+            l.can_cu_van_ban = [van_ban_map[str(vid)]]
 
-        if pd.notna(r.get("id_dieu_kien")) and r["id_dieu_kien"] in dieu_kien_map:
-            l.co_dieu_kien_ap_dung = [dieu_kien_map[r["id_dieu_kien"]]]
+        did = r.get("id_dieu_kien")
+        if pd.notna(did) and str(did) in dieu_kien_map:
+            l.co_dieu_kien_ap_dung = [dieu_kien_map[str(did)]]
 
+# Save ontology
 OUTPUT_FILE = ENGINE_DIR / "traffic_ontology.owl"
 onto.save(file=str(OUTPUT_FILE), format="rdfxml")
 print("[03_build_ontology.py] Ontology built successfully")
