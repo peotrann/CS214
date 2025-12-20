@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Traffic Intelligence | Premium Law Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #010409;
+            --accent: #0ea5e9;
+            --accent-glow: rgba(14, 165, 233, 0.4);
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-deep);
+            color: #f8fafc;
+            overflow-x: hidden;
+        }
+        .mesh-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 0% 0%, #0c1c38 0%, transparent 40%),
+                radial-gradient(circle at 100% 100%, #051020 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, #02040a 0%, #010409 100%);
+        }
+        .road-lines {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 40px, var(--accent) 40px, var(--accent) 41px);
+            mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+            animation: move-road 20s linear infinite;
+        }
+        @keyframes move-road {
+            from { background-position: 0 0; }
+            to { background-position: 0 1000px; }
+        }
+        .glass-panel {
+            background: rgba(13, 17, 23, 0.6);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .text-glow { text-shadow: 0 0 15px var(--accent-glow); }
+        
+        @keyframes rotate-radar {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .radar-sweep {
+            position: absolute;
+            width: 400px; height: 400px;
+            background: conic-gradient(from 0deg at 50% 50%, transparent 0deg, rgba(14, 165, 233, 0.1) 360deg);
+            border-radius: 50%;
+            animation: rotate-radar 10s linear infinite;
+            pointer-events: none;
+        }
+        
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+    </style>
+    <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@^19.2.3",
+        "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+        "react/": "https://esm.sh/react@^19.2.3/"
+      }
+    }
+    </script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+    <div class="mesh-bg"></div>
+    <div class="road-lines"></div>
+    <div id="root"></div>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>

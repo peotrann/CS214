@@ -25,43 +25,46 @@ def infer_penalties(vehicle_id=None, action_id=None, condition_id=None):
         if not law.name:
             continue
 
-        # Vehicle check
         vehicle_names = []
+        vehicle_aliases = []
         if law.ap_dung_cho_phuong_tien:
             for pt in law.ap_dung_cho_phuong_tien:
-                vehicle_names.extend([x.strip() for x in pt.name.split(",")])
-        if vehicle_id and (not vehicle_names or vehicle_id not in vehicle_names):
+                vehicle_names.append(pt.name)
+                alias = alias_module.resolve_vehicle(pt.name)
+                if alias:
+                    vehicle_aliases.append(alias)
+        if vehicle_id and (vehicle_id not in vehicle_names and vehicle_id not in vehicle_aliases):
             continue
 
-        # Action check
         action_names = []
+        action_aliases = []
         if law.ap_dung_hanh_vi:
             for hv in law.ap_dung_hanh_vi:
-                action_names.extend([x.strip() for x in hv.name.split(",")])
-        if action_id and (not action_names or action_id not in action_names):
+                action_names.append(hv.name)
+                alias = alias_module.resolve_action(hv.name)
+                if alias:
+                    action_aliases.append(alias)
+        if action_id and (action_id not in action_names and action_id not in action_aliases):
             continue
 
-        # Condition check (tên gốc hoặc alias)
-        law_condition_aliases = []
         law_condition_names = []
+        law_condition_aliases = []
         if law.co_dieu_kien_ap_dung:
             for dk in law.co_dieu_kien_ap_dung:
                 law_condition_names.append(dk.name)
                 alias = alias_module.resolve_condition(dk.name)
                 if alias:
                     law_condition_aliases.append(alias)
-
         if condition_id:
-            # Nếu luật không có điều kiện hoặc không khớp alias/tên gốc -> skip
-            if not law_condition_aliases and not law_condition_names:
+            if not law_condition_names and not law_condition_aliases:
                 continue
-            if condition_id not in law_condition_aliases and condition_id not in law_condition_names:
+            if condition_id not in law_condition_names and condition_id not in law_condition_aliases:
                 continue
 
         law_dict = {
             "id_luat": law.name,
-            "phuong_tien": [pt.name for pt in law.ap_dung_cho_phuong_tien] if law.ap_dung_cho_phuong_tien else [],
-            "hanh_vi": [hv.name for hv in law.ap_dung_hanh_vi] if law.ap_dung_hanh_vi else [],
+            "phuong_tien": vehicle_names if vehicle_names else [],
+            "hanh_vi": action_names if action_names else [],
             "dieu_kien": law_condition_names if law_condition_names else [],
             "van_ban": [vb.name for vb in law.can_cu_van_ban] if law.can_cu_van_ban else [],
             "muc_phat_min": safe_getattr(law, "muc_phat_min"),

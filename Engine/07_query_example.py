@@ -102,6 +102,7 @@ def filter_laws_for_web(query_text):
             "so_hieu": vb_info.get("so_hieu"),
             "loai": vb_info.get("loai"),
             "nam": vb_info.get("nam"),
+            "ngay_ban_hanh": format_validity(vb_info),
             "hieu_luc": format_validity(vb_info),
             "tinh_trang": vb_info.get("tinh_trang")
         })
