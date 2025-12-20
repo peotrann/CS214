@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from .utils import parse_query, filter_laws_for_web
+from .utils import filter_laws_for_web
 
 app = Flask(__name__)
 
@@ -7,13 +7,20 @@ app = Flask(__name__)
 def index():
     query = ""
     results = []
-    if request.method == "POST":
-        query = request.form.get("query", "")
-        vehicle_kw, action_kw, condition_kw, year = parse_query(query)
-        results = filter_laws_for_web(vehicle_kw, action_kw, condition_kw, year)
-    return render_template("index.html", query=query, results=results)
 
-@app.template_filter('comma')
+    if request.method == "POST":
+        query = request.form.get("query", "").strip()
+
+        if query:
+            results = filter_laws_for_web(query)
+
+    return render_template(
+        "index.html",
+        query=query,
+        results=results
+    )
+
+@app.template_filter("comma")
 def format_comma(value):
     try:
         return "{:,}".format(int(value))
