@@ -4,10 +4,8 @@ import re
 import importlib.util
 from datetime import datetime
 
-# Load modules: inference + alias
 ENGINE_DIR = Path(__file__).resolve().parent.parent / "Engine"
 
-# Inference engine
 spec = importlib.util.spec_from_file_location(
     "engine_module",
     ENGINE_DIR / "05_inference_engine.py"
@@ -15,7 +13,6 @@ spec = importlib.util.spec_from_file_location(
 engine_module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(engine_module)
 
-# Alias resolver
 spec = importlib.util.spec_from_file_location(
     "alias_module",
     ENGINE_DIR / "06_alias_resolver.py"
@@ -23,8 +20,9 @@ spec = importlib.util.spec_from_file_location(
 alias_module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(alias_module)
 
-# Load reference data
+
 DATA_DIR = Path(__file__).resolve().parent.parent / "Data"
+
 df_pt = pd.read_excel(DATA_DIR / "phuong_tien.xlsx")
 df_hv = pd.read_excel(DATA_DIR / "hanh_vi.xlsx")
 df_dk = pd.read_excel(DATA_DIR / "dieu_kien.xlsx")
@@ -35,18 +33,15 @@ hv_id2name = dict(zip(df_hv.id_hanh_vi, df_hv.ten_hanh_vi))
 dk_id2name = dict(zip(df_dk.id_dieu_kien, df_dk.ten_dieu_kien))
 vb_id2info = df_vb.set_index("id_van_ban").to_dict("index")
 
-# Helpers
 def format_money(value):
-    """Định dạng tiền: 1000 -> 1.000.000 VND"""
     if value is None:
         return ""
     try:
-        return f"{int(value*1000):,}".replace(",", ".")
+        return f"{int(value * 1000):,}".replace(",", ".")
     except:
         return str(value)
 
 def format_date(value):
-    """Định dạng ngày dd/mm/yyyy"""
     if value is None or (isinstance(value, float) and pd.isna(value)):
         return None
     if isinstance(value, pd.Timestamp):
@@ -54,35 +49,57 @@ def format_date(value):
     return str(value)
 
 def format_validity(vb_info):
-    """Hiệu lực văn bản"""
+    if not vb_info:
+        return None
     from_date = format_date(vb_info.get("hieu_luc_tu"))
     to_date = format_date(vb_info.get("hieu_luc_den")) or "nay"
     return f"{from_date} -> {to_date}"
 
 def find_year(text):
-    """Tìm năm trong query"""
     m = re.search(r"\b(19\d{2}|20\d{2})\b", text)
     return int(m.group(0)) if m else None
 
-# Main API: filter laws
+def resolve_dieu_khoan(text):
+    if not isinstance(text, str):
+        return None, None
+
+    text = text.lower()
+    dieu = None
+    khoan = None
+
+    m_dieu = re.search(r"điều\s*(\d+)", text)
+    if m_dieu:
+        dieu = int(m_dieu.group(1))
+
+    m_khoan = re.search(r"khoản\s*(\d+)", text)
+    if m_khoan:
+        khoan = int(m_khoan.group(1))
+
+    return dieu, khoan
+
+
 def filter_laws_for_web(query_text):
     vehicle_id = alias_module.resolve_vehicle(query_text)
     action_id = alias_module.resolve_action(query_text)
     condition_id = alias_module.resolve_condition(query_text)
+
+    dieu, khoan = resolve_dieu_khoan(query_text)
     year = find_year(query_text)
 
     laws = engine_module.infer_penalties(
         vehicle_id=vehicle_id,
         action_id=action_id,
-        condition_id=condition_id
+        condition_id=condition_id,
+        dieu=dieu,
+        khoan=khoan
     )
 
     results = []
+
     for law in laws:
         vb_ids = law.get("van_ban", [])
         vb_info = vb_id2info.get(vb_ids[0] if vb_ids else None, {})
 
-        # lọc theo năm nếu có
         if year and vb_info.get("nam") != year:
             continue
 
@@ -96,8 +113,8 @@ def filter_laws_for_web(query_text):
             "hinh_thuc_bo_sung": law.get("hinh_thuc_bo_sung"),
             "dieu": law.get("dieu"),
             "khoan": law.get("khoan"),
+            "doi_tuong_ap_dung": law.get("doi_tuong_ap_dung"),
             "ghi_chu": law.get("ghi_chu"),
-            "doi_tuong_ap_dung": law.get("doi_tuong_ap_dung"),  # thêm trường này
             "van_ban": vb_info.get("ten_van_ban"),
             "so_hieu": vb_info.get("so_hieu"),
             "loai": vb_info.get("loai"),
@@ -109,7 +126,6 @@ def filter_laws_for_web(query_text):
 
     return results
 
-# CLI test mode
 if __name__ == "__main__":
     print("Nhập câu hỏi vi phạm giao thông (gõ exit để thoát)\n")
 

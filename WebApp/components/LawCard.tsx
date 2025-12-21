@@ -38,24 +38,44 @@ const VehicleIcon = ({ type }: { type: string }) => {
   );
 };
 
-const LawCard: React.FC<{ law: LawResult }> = ({ law }) => {
+interface LawCardProps {
+  law: LawResult;
+  onDetailClick?: (searchQuery: string) => void;
+}
+
+const LawCard: React.FC<LawCardProps> = ({ law, onDetailClick }) => {
   const dieuDisplay = law.dieu !== undefined ? Math.floor(Number(law.dieu)) : '-';
   const khoanDisplay = law.khoan !== undefined ? Math.floor(Number(law.khoan)) : '-';
+  const isInEffect = law.tinh_trang === 'Còn hiệu lực';
+
+  const handleDetailClick = () => {
+    if (onDetailClick) {
+      const searchQuery = `Điều ${dieuDisplay} khoản ${khoanDisplay} năm ${law.nam}`;
+      onDetailClick(searchQuery);
+    }
+  };
 
   return (
     <div className="glass-panel rounded-[2rem] p-8 transition-all duration-500 hover:border-sky-500/30 hover:shadow-[0_0_60px_-15px_rgba(14,165,233,0.3)] group mb-6 relative overflow-hidden">
       <div className="absolute top-0 right-0 w-32 h-32 bg-sky-500/5 rounded-full -mr-16 -mt-16 blur-3xl"></div>
 
       <div className="flex flex-col md:flex-row justify-between items-start gap-6 mb-8 relative z-10">
-        <div className="flex-1 space-y-2">
-          <div className="flex items-center gap-4">
+        <div className="flex-1 space-y-3">
+          <div className="flex items-center gap-3">
             <div className="mono text-[10px] font-bold text-sky-400 border border-sky-400/30 px-3 py-1 rounded-full bg-sky-400/5">
               Ref: {law.id_luat}
             </div>
-            {law.tinh_trang === 'Còn hiệu lực' && (
-              <div className="flex items-center gap-1.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981]"></div>
-                <span className="text-[10px] font-extrabold text-emerald-500/80 uppercase tracking-widest">In Effect</span>
+            
+            {/* Mục Tình trạng với hiệu ứng thu hút */}
+            {isInEffect ? (
+              <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/60 animate-pulse shadow-[0_0_20px_-5px_rgba(16,185,129,0.4)]">
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_10px_#10b981]"></div>
+                <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest">Đang có hiệu lực</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/60 shadow-[0_0_20px_-5px_rgba(239,68,68,0.4)]">
+                <div className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_10px_#ef4444]"></div>
+                <span className="text-[10px] font-black text-red-400 uppercase tracking-widest">{law.tinh_trang}</span>
               </div>
             )}
           </div>
@@ -105,9 +125,8 @@ const LawCard: React.FC<{ law: LawResult }> = ({ law }) => {
             <div>
               <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Căn cứ văn bản</p>
               <p className="text-xs text-slate-300 font-medium leading-relaxed mt-1">{law.van_ban}</p>
-              <p className="text-[10px] text-sky-400/60 font-mono mt-1">SỐ HIỆU: {law.so_hieu}</p>
+              <p className="text-[10px] text-sky-400/60 font-mono mt-1 uppercase">SỐ HIỆU: {law.so_hieu}</p>
               <p className="text-[10px] text-slate-400/70 mt-1">Ngày ban hành: {law.ngay_ban_hanh || '-'}</p>
-              <p className="text-[10px] text-emerald-400/60 font-mono mt-1">Tình trạng: {law.tinh_trang}</p>
             </div>
           </div>
 
@@ -145,7 +164,10 @@ const LawCard: React.FC<{ law: LawResult }> = ({ law }) => {
                 <span className="mono text-white font-bold">{law.nam}</span>
               </div>
               <div className="pt-3 border-t border-white/5 flex gap-2">
-                <button className="flex-1 bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">
+                <button 
+                  onClick={handleDetailClick}
+                  className="flex-1 bg-sky-500/10 hover:bg-sky-500/20 text-sky-400 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
+                >
                   Xem Chi Tiết
                 </button>
               </div>
@@ -155,27 +177,41 @@ const LawCard: React.FC<{ law: LawResult }> = ({ law }) => {
       </div>
 
       {(law.hinh_thuc_bo_sung || law.ghi_chu) && (
-        <div className="mt-8 pt-6 border-t border-white/5">
+        <div className="mt-8 pt-6 border-t border-white/5 relative z-10">
+          {/* Dòng cảnh báo nổi bật khi luật không còn hiệu lực */}
+          {!isInEffect && (
+            <div className="mb-6 bg-red-500/10 border border-red-500/30 rounded-2xl p-4 flex items-center gap-3 animate-pulse shadow-[0_0_15px_-5px_rgba(239,68,68,0.3)]">
+              <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center shrink-0">
+                <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <span className="text-xs font-black text-red-400 uppercase tracking-tight">
+                Luật đã bị chỉnh sửa, chú ý phần thông tin thêm tìm hiểu thêm!
+              </span>
+            </div>
+          )}
+
           <div className="flex flex-col sm:flex-row gap-4">
             {law.hinh_thuc_bo_sung && (
-              <div className="flex-1 bg-amber-500/5 border border-amber-500/20 rounded-2xl p-4 flex gap-3">
-                <svg className="w-4 h-4 text-amber-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex-1 rounded-2xl p-4 flex gap-3 border bg-amber-500/5 border-amber-500/20 transition-all">
+                <svg className="w-4 h-4 shrink-0 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" strokeWidth="2"/>
                 </svg>
                 <div>
-                  <span className="text-[10px] font-black text-amber-500 uppercase tracking-widest block mb-1">Hình thức bổ sung</span>
-                  <p className="text-[11px] text-amber-200/80 leading-relaxed italic">{law.hinh_thuc_bo_sung}</p>
+                  <span className="text-[10px] font-black uppercase tracking-widest block mb-1 text-amber-500">Hình thức bổ sung</span>
+                  <p className="text-[11px] leading-relaxed italic text-amber-200/80">{law.hinh_thuc_bo_sung}</p>
                 </div>
               </div>
             )}
             {law.ghi_chu && (
-              <div className="flex-1 bg-sky-500/5 border border-sky-500/20 rounded-2xl p-4 flex gap-3">
-                <svg className="w-4 h-4 text-sky-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex-1 rounded-2xl p-4 flex gap-3 border bg-sky-500/5 border-sky-500/20 transition-all">
+                <svg className="w-4 h-4 shrink-0 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" strokeWidth="2"/>
                 </svg>
                 <div>
-                  <span className="text-[10px] font-black text-sky-500 uppercase tracking-widest block mb-1">Thông tin thêm</span>
-                  <p className="text-[11px] text-sky-200/80 leading-relaxed italic">{law.ghi_chu}</p>
+                  <span className="text-[10px] font-black uppercase tracking-widest block mb-1 text-sky-500">Thông tin thêm</span>
+                  <p className="text-[11px] leading-relaxed italic text-sky-200/80">{law.ghi_chu}</p>
                 </div>
               </div>
             )}

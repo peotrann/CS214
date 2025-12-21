@@ -1,5 +1,4 @@
-
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { LawResult } from './types';
 import { queryTrafficLaw } from './services/api';
 import LawCard from './components/LawCard';
@@ -16,6 +15,9 @@ const App: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState(false);
+
+  // Sử dụng ref để có thể scroll hoặc focus nếu cần, giữ nguyên phông chữ và style cũ
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSearch = useCallback(async (e?: React.FormEvent, customQuery?: string) => {
     if (e) e.preventDefault();
@@ -36,9 +38,23 @@ const App: React.FC = () => {
     }
   }, [query]);
 
+  // Hàm xử lý khi bấm "Xem Chi Tiết" trên LawCard
+  const handleQuickDetail = (detailQuery: string) => {
+    setQuery(detailQuery);
+    handleSearch(undefined, detailQuery);
+    
+    // Tự động cuộn lên thanh tìm kiếm để người dùng thấy kết quả mới
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // Focus vào ô input
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-6 py-12 md:py-24 relative">
-      {/* Abstract Radar Background */}
+      {/* Abstract Radar Background - Giữ nguyên style cũ */}
       <div className="fixed top-0 right-0 p-24 opacity-20 pointer-events-none">
          <div className="radar-sweep"></div>
       </div>
@@ -84,6 +100,7 @@ const App: React.FC = () => {
               <svg className="w-6 h-6 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
             </div>
             <input
+              ref={inputRef}
               type="text"
               className="w-full bg-black/80 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] py-8 pl-20 pr-48 text-white text-xl placeholder-slate-600 transition-all outline-none focus:bg-black"
               placeholder="Bạn muốn tra cứu hành vi vi phạm nào?"
@@ -129,7 +146,7 @@ const App: React.FC = () => {
               className="animate-in fade-in slide-in-from-bottom-12 duration-700" 
               style={{ animationDelay: `${idx * 150}ms`, animationFillMode: 'both' }}
             >
-              <LawCard law={law} />
+              <LawCard law={law} onDetailClick={handleQuickDetail} />
             </div>
           ))}
         </div>
