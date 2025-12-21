@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { LawResult } from '../types';
 
@@ -46,7 +47,9 @@ interface LawCardProps {
 const LawCard: React.FC<LawCardProps> = ({ law, onDetailClick }) => {
   const dieuDisplay = law.dieu !== undefined ? Math.floor(Number(law.dieu)) : '-';
   const khoanDisplay = law.khoan !== undefined ? Math.floor(Number(law.khoan)) : '-';
-  const isInEffect = law.tinh_trang === 'Còn hiệu lực';
+  
+  // Xác định trạng thái hiệu lực (Chấp nhận cả 'Còn hiệu lực' và 'Đang có hiệu lực')
+  const isInEffect = law.tinh_trang === 'Còn hiệu lực' || law.tinh_trang === 'Đang có hiệu lực';
 
   const handleDetailClick = () => {
     if (onDetailClick) {
@@ -66,7 +69,7 @@ const LawCard: React.FC<LawCardProps> = ({ law, onDetailClick }) => {
               Ref: {law.id_luat}
             </div>
             
-            {/* Mục Tình trạng với hiệu ứng thu hút */}
+            {/* Mục Tình trạng: Hiển thị xanh nếu đang có hiệu lực */}
             {isInEffect ? (
               <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/60 animate-pulse shadow-[0_0_20px_-5px_rgba(16,185,129,0.4)]">
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_10px_#10b981]"></div>
@@ -176,9 +179,9 @@ const LawCard: React.FC<LawCardProps> = ({ law, onDetailClick }) => {
         </div>
       </div>
 
-      {(law.hinh_thuc_bo_sung || law.ghi_chu) && (
+      {(law.hinh_thuc_bo_sung || law.ghi_chu || !isInEffect) && (
         <div className="mt-8 pt-6 border-t border-white/5 relative z-10">
-          {/* Dòng cảnh báo nổi bật khi luật không còn hiệu lực */}
+          {/* Dòng cảnh báo CHỈ HIỂN THỊ khi luật KHÔNG CÒN hiệu lực */}
           {!isInEffect && (
             <div className="mb-6 bg-red-500/10 border border-red-500/30 rounded-2xl p-4 flex items-center gap-3 animate-pulse shadow-[0_0_15px_-5px_rgba(239,68,68,0.3)]">
               <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center shrink-0">
